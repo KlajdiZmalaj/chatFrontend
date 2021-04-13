@@ -1,5 +1,5 @@
 import { notification } from "antd";
-export const endpoint = "test.com";
+export const endpoint = "http://localhost:5000/api";
 
 const hasCode = (error, status) => {
   if (
@@ -16,7 +16,7 @@ export const handleError = (error) => {
   // console.log("error handler", error, { error });
   if (hasCode(error, 401)) {
     //loged out
-    //window.store.dispatch({ type: "SET_UNAUTHORIZATION" });
+    window.store.dispatch({ type: "SET_UNAUTHORIZATION" });
   } else if (error?.message === "Network Error") {
     //network error
   } else if (hasCode(error, 445)) {
@@ -31,9 +31,8 @@ export const handleError = (error) => {
     notification["error"]({
       message: error?.response?.data?.message || "error Message",
       description:
-        (error?.response?.data?.errors &&
-          Object.values(error.response.data.errors)) ||
-        "error Desc",
+        error?.response?.data?.errors &&
+        Object.values(error.response.data.errors),
       placement: window.innerWidth <= 1024 ? "topRight" : "bottomRight",
       duration: 4,
     });

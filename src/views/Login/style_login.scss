@@ -1,0 +1,82 @@
+[data-route="login"] {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg4);
+  color: var(--col4);
+}
+.login-left {
+  width: 400px;
+  background-color: var(--bg1);
+  color: var(--col1);
+}
+.loginForm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  padding: 20px;
+  margin: 0 auto;
+  width: 300px;
+
+  > i {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: var(--bg2);
+  }
+  > div {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    border: 1px solid var(--bg3);
+    input {
+      background: transparent;
+      border: 0;
+      padding-left: 26px;
+      outline: none;
+      height: 25px;
+      width: 100%;
+    }
+    > i {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-38%);
+      font-size: 12px;
+    }
+  }
+  button {
+    background-color: var(--bg3);
+    color: var(--col3);
+    border: 0;
+    height: 35px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: 1px solid #bcb8b1;
+    transition: 0.3s;
+    outline: none;
+    &:hover {
+      background-color: var(--bg5);
+      color: var(--col5);
+    }
+  }
+  p {
+    text-align: right;
+    width: 100%;
+    font-weight: 300;
+    span {
+      cursor: pointer;
+      font-weight: 400;
+    }
+  }
+}

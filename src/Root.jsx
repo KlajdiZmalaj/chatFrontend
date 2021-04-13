@@ -1,28 +1,41 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AuthActions } from "redux-store/models";
 import { connect } from "react-redux";
-import { HashRouter, Switch, Route } from "react-router-dom";
+import { HashRouter, Switch, Route, Redirect } from "react-router-dom";
+import * as Routes from "routes";
 import "antd/dist/antd.css";
-
-const Root = ({ getData, test }) => {
-  useEffect(() => {
-    getData("test1", "test2");
-  }, []);
-  console.log("test", test);
+import "styles/general.css";
+const Root = ({ loginData = {} }) => {
   return (
     <>
       <HashRouter>
         <Switch>
-          {/* <Route path="/home" render={Component} /> */}
-          {/* <Route path="/home" render={Component} /> */}
-          {/* <Route path="/home" render={Component} /> */}
+          <Route exact path="/">
+            {loginData.token ? (
+              <Redirect to="/home" />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+
+          <Route
+            path="/login"
+            render={() => {
+              if (loginData.token) {
+                return <Redirect to="/home" />;
+              } else {
+                return <Routes.Login />;
+              }
+            }}
+          />
+          <Route path="/home">
+            {loginData.token ? <Routes.Home /> : <Redirect to="/login" />}
+          </Route>
         </Switch>
       </HashRouter>
     </>
   );
 };
 
-const mstp = ({ auth: { test } }) => ({
-  test,
-});
+const mstp = ({ auth: { loginData } }) => ({ loginData });
 export default connect(mstp, { ...AuthActions })(Root);

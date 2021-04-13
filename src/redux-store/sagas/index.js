@@ -6,7 +6,10 @@ import * as AuthGenerators from "./AuthSagas";
 export default function* rootSaga() {
   yield all([
     // AUTH
-    ...[takeLatest("GET_DATA", AuthGenerators.getData)],
+    ...[
+      takeLatest("GET_LOGIN", AuthGenerators.getLogin),
+      takeLatest("CHECK_TOKEN", AuthGenerators.checkToken),
+    ],
     // MAIN
   ]);
 }

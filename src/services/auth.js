@@ -9,7 +9,7 @@ instanceAxios.interceptors.request.use(
   async (config) => {
     // console.log("req config", config);
     var Auth = true;
-    if (config.url === "/users/login") {
+    if (config.url.match(/login|check/g)) {
       //api -> without token
       Auth = false;
     }
@@ -34,12 +34,22 @@ instanceAxios.interceptors.response.use(
   (error) => handleError(error)
 );
 
-export const getDataReq = (param1, param2) => {
+export const Login = (username, password) => {
   return instanceAxios
-    .get("/test", {
+    .get("/login", {
       params: {
-        param1,
-        param2,
+        username,
+        password,
+      },
+    })
+    .catch((error) => ({ error }));
+};
+
+export const checkToken = (token) => {
+  return instanceAxios
+    .get("/check", {
+      params: {
+        token,
       },
     })
     .catch((error) => ({ error }));

@@ -1,19 +1,28 @@
 import { createActions, createReducer } from "reduxsauce";
 
 const { Types, Creators } = createActions({
-  setTest: ["test"],
-  getData: ["param1", "param2"],
+  setUnauthorization: [],
+  getLogin: ["username", "password"],
+  setLoginData: ["loginData"],
+  checkToken: ["token"],
 });
 
 export const AuthTypes = Types;
 export default Creators;
 
 const INITIAL_STATE = {
-  test: "test",
+  loginData: JSON.parse(localStorage.getItem("loginData") || "{}") || {},
 };
 export const reducer = createReducer(INITIAL_STATE, {
-  SET_TEST: (state, { test }) => ({
+  SET_LOGIN_DATA: (state, { loginData }) => ({
     ...state,
-    test,
+    loginData,
   }),
+  SET_UNAUTHORIZATION: () => {
+    localStorage.setItem("loginData", "{}");
+    return {
+      ...INITIAL_STATE,
+      loginData: {},
+    };
+  },
 });
