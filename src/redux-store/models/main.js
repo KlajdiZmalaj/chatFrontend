@@ -6,6 +6,7 @@ const { Types, Creators } = createActions({
   getRooms: [],
   setRooms: ["rooms"],
   setActiveRoom: ["activeRoom"],
+  updateRoomMessages: ["data"],
 });
 
 export const MainTypes = Types;

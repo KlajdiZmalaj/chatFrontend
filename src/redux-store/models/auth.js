@@ -5,6 +5,7 @@ const { Types, Creators } = createActions({
   getLogin: ["username", "password"],
   setLoginData: ["loginData"],
   checkToken: ["token"],
+  submitMsg: ["id", "text", "token"],
 });
 
 export const AuthTypes = Types;

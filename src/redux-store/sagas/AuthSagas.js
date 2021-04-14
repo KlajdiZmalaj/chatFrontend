@@ -27,3 +27,10 @@ export function* checkToken({ token }) {
   }
   console.log("response check token", response?.data);
 }
+
+export function* submitMsg({ id, text, token }) {
+  const response = yield call(AuthReq.submitMsg, id, text, token);
+  if (response.data) {
+    console.log("msg sent", response);
+  }
+}

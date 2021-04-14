@@ -7,18 +7,11 @@ export const instanceAxios = axios.create({
 
 instanceAxios.interceptors.request.use(
   async (config) => {
-    // console.log("req config", config);
-    var Auth = true;
-    if (config.url.match(/login|check/g)) {
-      //api -> without token
-      Auth = false;
-    }
-    const value = await localStorage.getItem("token");
-    const token = JSON.parse(value);
+    console.log("req config", config);
     config.headers = {
-      ...(Auth ? { Authorization: `Bearer ${token}` } : {}),
       Accept: "application/json",
     };
+
     return config;
   },
   (error) => {
@@ -51,6 +44,16 @@ export const checkToken = (token) => {
       params: {
         token,
       },
+    })
+    .catch((error) => ({ error }));
+};
+
+export const submitMsg = (id, text, token) => {
+  return instanceAxios
+    .post("/sendMsg", {
+      roomId: id,
+      text,
+      token,
     })
     .catch((error) => ({ error }));
 };

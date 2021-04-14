@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AuthActions, MainActions } from "redux-store/models";
 import { connect } from "react-redux";
 import "styles/style_home.css";
@@ -15,11 +15,13 @@ const Home = ({
   roomData,
   setRoomData,
   checkToken,
+  submitMsg,
 }) => {
   useEffect(() => {
     getRooms();
   }, []);
-  console.log("dataas activeRoom roomData", roomData);
+  const [inputValue, setInputMsg] = useState("");
+  //console.log("dataas activeRoom roomData", roomData);
   return (
     <div className="homePage">
       <div className="homePage--left">
@@ -78,37 +80,56 @@ const Home = ({
           </div>
         </div>
         <div className="homePage--right__messages">
-          {roomData?.messages ? (
-            roomData?.messages
-              ?.sort((a, b) => a - b)
-              .map((msg) => {
-                return (
-                  <Tooltip
-                    placement={
-                      loginData?.username === msg?.user?.username
-                        ? "topRight"
-                        : "topLeft"
-                    }
-                    title={`Sent at ${moment(msg.date).format(
-                      "MMMM Do YYYY, h:mm:ss a"
-                    )}`}
-                  >
-                    <div
-                      className={`msg${
-                        loginData?.username === msg?.user?.username ? " me" : ""
-                      }`}
+          <div className="msg-wrapper">
+            {roomData?.messages ? (
+              roomData?.messages
+                ?.sort((a, b) => a - b)
+                .map((msg) => {
+                  return (
+                    <Tooltip
+                      placement={
+                        loginData?.username === msg?.user?.username
+                          ? "topRight"
+                          : "topLeft"
+                      }
+                      title={`Sent at ${moment(msg.date).format(
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )}`}
                     >
-                      <div className="userMsg">{msg?.user?.username}</div>
-                      <div className="text">{msg?.text}</div>
-                    </div>
-                  </Tooltip>
-                );
-              })
-          ) : (
-            <span>
-              No messages yet in this room. Start typing your first message.
-            </span>
-          )}
+                      <div
+                        className={`msg${
+                          loginData?.username === msg?.user?.username
+                            ? " me"
+                            : ""
+                        }`}
+                      >
+                        <div className="userMsg">{msg?.user?.username}</div>
+                        <div className="text">{msg?.text}</div>
+                      </div>
+                    </Tooltip>
+                  );
+                })
+            ) : (
+              <span>
+                No messages yet in this room. Start typing your first message.
+              </span>
+            )}
+          </div>
+          <div className="inputbar">
+            <i className="far fa-grin-stars"></i>
+            <input
+              type="text"
+              onChange={(e) => {
+                setInputMsg(e.target.value);
+              }}
+            />
+            <i
+              className="fad fa-paper-plane"
+              onClick={() => {
+                submitMsg(roomData._id, inputValue, loginData?.token);
+              }}
+            ></i>
+          </div>
         </div>
       </div>
     </div>
