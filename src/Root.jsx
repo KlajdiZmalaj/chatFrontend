@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AuthActions } from "redux-store/models";
 import { connect } from "react-redux";
 import { HashRouter, Switch, Route, Redirect } from "react-router-dom";
 import * as Routes from "routes";
 import "antd/dist/antd.css";
 import "styles/general.css";
+import { io } from "socket.io-client";
+
 const Root = ({ loginData = {} }) => {
+  useEffect(() => {
+    const socket = io("http://localhost:5000");
+    socket.on("connect", (data) => {
+      console.log("connected", data);
+    });
+    socket.on("FromAPI", (data) => {
+      console.log("FromAPI", data);
+    });
+  }, []);
   return (
     <>
       <HashRouter>

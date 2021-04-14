@@ -7,7 +7,7 @@ import rootSaga from "./sagas";
 
 const rootReducer = combineReducers({
   auth: AuthReducer,
-  // main: MainReducer,
+  main: MainReducer,
 });
 
 export function configureStore() {
