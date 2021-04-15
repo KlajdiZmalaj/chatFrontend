@@ -7,7 +7,6 @@ export const instanceAxios = axios.create({
 
 instanceAxios.interceptors.request.use(
   async (config) => {
-    console.log("req config", config);
     config.headers = {
       Accept: "application/json",
     };

@@ -20,6 +20,13 @@ const Home = ({
   useEffect(() => {
     getRooms();
   }, []);
+  useEffect(() => {
+    const el = document.querySelector(".msg:last-child");
+    if (el)
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+  }, [roomData?.name]);
   const [inputValue, setInputMsg] = useState("");
   //console.log("dataas activeRoom roomData", roomData);
   return (
@@ -34,6 +41,10 @@ const Home = ({
               onClick={() => {
                 setActiveRoom(room._id);
                 getRoomData(room._id);
+                if (activeRoom) {
+                  window.socket.emit("unsubscribe", activeRoom);
+                }
+                window.socket.emit("subscribe", room._id);
               }}
             >
               <img src={room?.image} alt="" /> <span>{room?.name}</span>
@@ -80,13 +91,14 @@ const Home = ({
           </div>
         </div>
         <div className="homePage--right__messages">
-          <div className="msg-wrapper">
+          <div id="msgWrapper" className="msg-wrapper">
             {roomData?.messages ? (
               roomData?.messages
                 ?.sort((a, b) => a - b)
                 .map((msg) => {
                   return (
                     <Tooltip
+                      key={msg._id}
                       placement={
                         loginData?.username === msg?.user?.username
                           ? "topRight"
@@ -111,11 +123,13 @@ const Home = ({
                 })
             ) : (
               <span>
-                No messages yet in this room. Start typing your first message.
+                {!activeRoom
+                  ? "No room selected."
+                  : "No messages yet in this room. Start typing your first message."}
               </span>
             )}
           </div>
-          <div className="inputbar">
+          <div className={!activeRoom ? "disable inputbar" : "inputbar"}>
             <i className="far fa-grin-stars"></i>
             <input
               type="text"

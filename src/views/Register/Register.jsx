@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { AuthActions } from "redux-store/models";
 import { connect } from "react-redux";
-import LeftSide from "./LeftSide";
+import LeftSide from "../Login/LeftSide";
 import "styles/style_login.css";
 
-const Login = ({ getLogin }) => {
+const Register = ({ getLogin }) => {
   const [formData, setFormData] = useState({});
   console.log("ca ka", formData);
   return (
@@ -15,8 +15,8 @@ const Login = ({ getLogin }) => {
         <div>
           <i className="fal fa-user" aria-hidden="true"></i>
           <input
-            placeholder="Username"
             type="text"
+            placeholder="UserName"
             onChange={(e) => {
               setFormData({
                 ...formData,
@@ -38,6 +38,19 @@ const Login = ({ getLogin }) => {
             }}
           />
         </div>
+        <div>
+          <i className="fal fa-lock" aria-hidden="true"></i>
+          <input
+            placeholder="Repeat Passcode"
+            type="text"
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                password: e.target.value,
+              });
+            }}
+          />
+        </div>
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -45,16 +58,16 @@ const Login = ({ getLogin }) => {
             getLogin(formData.username, formData.password);
           }}
         >
-          Loggin
+          Register
         </button>
         <p>
-          Dont have account?{" "}
+          Already Signed Up?{" "}
           <span
             onClick={() => {
-              window.location.hash = "register";
+              window.location.hash = "login";
             }}
           >
-            Register
+            Login
           </span>
         </p>
       </form>
@@ -62,4 +75,4 @@ const Login = ({ getLogin }) => {
   );
 };
 
-export default connect(null, AuthActions)(Login);
+export default connect(null, AuthActions)(Register);

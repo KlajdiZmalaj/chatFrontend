@@ -10,6 +10,9 @@
   width: 400px;
   background-color: var(--bg1);
   color: var(--col1);
+  background-image: url("../images/2592543.jpg");
+  background-size: cover;
+  background-position: center;
 }
 .loginForm {
   display: flex;
@@ -23,7 +26,7 @@
   > i {
     font-size: 50px;
     margin-bottom: 20px;
-    color: var(--bg2);
+    color: var(--col3);
   }
   > div {
     margin-bottom: 5px;
@@ -32,14 +35,21 @@
     width: 100%;
     justify-content: center;
     position: relative;
-    border: 1px solid var(--bg3);
+    border: 1px solid var(--col3);
+    color: var(--bg1);
+
     input {
       background: transparent;
       border: 0;
       padding-left: 26px;
       outline: none;
-      height: 25px;
+      height: 40px;
       width: 100%;
+      color: var(--bg1);
+
+      &::placeholder {
+        color: var(--bg1);
+      }
     }
     > i {
       position: absolute;
@@ -50,10 +60,8 @@
     }
   }
   button {
-    background-color: var(--bg3);
-    color: var(--col3);
     border: 0;
-    height: 35px;
+    height: 40px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -62,9 +70,10 @@
     font-size: 13px;
     margin-top: 10px;
     cursor: pointer;
-    border: 1px solid #bcb8b1;
     transition: 0.3s;
     outline: none;
+    background-color: var(--col3);
+    color: var(--bg3);
     &:hover {
       background-color: var(--bg5);
       color: var(--col5);
@@ -76,7 +85,8 @@
     font-weight: 300;
     span {
       cursor: pointer;
-      font-weight: 400;
+      font-weight: 500;
+      font-size: 14px;
     }
   }
 }
