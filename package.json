@@ -26,15 +26,18 @@
     "socket.io": "^4.0.1",
     "socket.io-client": "^4.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gh-pages": "^3.1.0"
+  },
   "scripts": {
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "release": "npm run react-build",
-    "build": "cross-env NODE_PATH=src npm run react-build",
-    "start": "cross-env NODE_PATH=src npm run react-start"
+    "build": "cross-env NODE_PATH=src npm run react-build GENERATE_SOURCEMAP=false",
+    "start": "cross-env NODE_PATH=src npm run react-start",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

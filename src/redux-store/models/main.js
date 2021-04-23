@@ -7,6 +7,7 @@ const { Types, Creators } = createActions({
   setRooms: ["rooms"],
   setActiveRoom: ["activeRoom"],
   updateRoomMessages: ["data"],
+  getRegister: ["username", "password", "redirectAndClear"],
 });
 
 export const MainTypes = Types;

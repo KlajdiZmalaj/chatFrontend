@@ -13,6 +13,7 @@ export default function* rootSaga() {
     ],
     // MAIN
     ...[
+      takeLatest("GET_REGISTER", MainGenerators.getRegister),
       takeLatest("GET_ROOMS", MainGenerators.getRooms),
       takeLatest("GET_ROOM_DATA", MainGenerators.getRoomData),
       takeLatest("UPDATE_ROOM_MESSAGES", MainGenerators.updateRoomMessages),

@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 export const loadSocket = () => {
-  const socket = io("http://localhost:5000");
+  const socket = io("http://192.168.5.220:5000");
   window.socket = socket;
   socket.on("connect", () => {
     console.log("socket connected");

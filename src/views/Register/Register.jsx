@@ -1,22 +1,26 @@
 import React, { useState } from "react";
-import { AuthActions } from "redux-store/models";
+import { MainActions } from "redux-store/models";
 import { connect } from "react-redux";
 import LeftSide from "../Login/LeftSide";
 import "styles/style_login.css";
+import { notification } from "antd";
 
-const Register = ({ getLogin }) => {
+const Register = ({ getRegister }) => {
   const [formData, setFormData] = useState({});
-  console.log("ca ka", formData);
+  const redirectAndClear = () => {
+    setFormData({ username: "", password: "", password2: "" });
+  };
   return (
     <>
       <LeftSide />
       <form className="loginForm">
-        <i className="fal fa-user-circle" aria-hidden="true"></i>{" "}
+        <i className="fal fa-user-plus" aria-hidden="true"></i>
         <div>
           <i className="fal fa-user" aria-hidden="true"></i>
           <input
             type="text"
             placeholder="UserName"
+            value={formData.username}
             onChange={(e) => {
               setFormData({
                 ...formData,
@@ -30,6 +34,7 @@ const Register = ({ getLogin }) => {
           <input
             placeholder="Passcode"
             type="text"
+            value={formData.password}
             onChange={(e) => {
               setFormData({
                 ...formData,
@@ -43,10 +48,11 @@ const Register = ({ getLogin }) => {
           <input
             placeholder="Repeat Passcode"
             type="text"
+            value={formData.password2}
             onChange={(e) => {
               setFormData({
                 ...formData,
-                password: e.target.value,
+                password2: e.target.value,
               });
             }}
           />
@@ -55,13 +61,30 @@ const Register = ({ getLogin }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            getLogin(formData.username, formData.password);
+            if (
+              formData.username &&
+              formData.password &&
+              formData.password === formData.password2
+            ) {
+              getRegister(
+                formData.username,
+                formData.password,
+                redirectAndClear
+              );
+            } else {
+              notification["error"]({
+                description: "Passwords are not the same",
+                placement:
+                  window.innerWidth <= 1024 ? "topRight" : "bottomRight",
+                duration: 4,
+              });
+            }
           }}
         >
           Register
         </button>
         <p>
-          Already Signed Up?{" "}
+          Already Signed Up?
           <span
             onClick={() => {
               window.location.hash = "login";
@@ -75,4 +98,4 @@ const Register = ({ getLogin }) => {
   );
 };
 
-export default connect(null, AuthActions)(Register);
+export default connect(null, MainActions)(Register);

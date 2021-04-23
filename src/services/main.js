@@ -25,6 +25,15 @@ instanceAxios.interceptors.response.use(
   (error) => handleError(error)
 );
 
+export const register = (username, password) => {
+  return instanceAxios
+    .post(`/register`, {
+      username,
+      password,
+    })
+    .catch((error) => ({ error }));
+};
+
 export const getRooms = () => {
   return instanceAxios.get("/getRooms").catch((error) => ({ error }));
 };

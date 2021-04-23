@@ -74,14 +74,14 @@ const Home = ({
               checkToken(loginData.token);
             }}
           >
-            Check token
+            <i className="fal fa-badge-check"></i> Check token
           </button>
           <button
             onClick={() => {
               setUnauthorization();
             }}
           >
-            Log OUT
+            <i className="fal fa-sign-out"></i> Log OUT
           </button>
         </div>
         <div className="homePage--right__cover">
@@ -133,6 +133,13 @@ const Home = ({
             <i className="far fa-grin-stars"></i>
             <input
               type="text"
+              value={inputValue}
+              onKeyPress={(e) => {
+                if (e.charCode == 13) {
+                  setInputMsg("");
+                  submitMsg(roomData._id, inputValue, loginData?.token);
+                }
+              }}
               onChange={(e) => {
                 setInputMsg(e.target.value);
               }}
@@ -140,6 +147,7 @@ const Home = ({
             <i
               className="fad fa-paper-plane"
               onClick={() => {
+                setInputMsg("");
                 submitMsg(roomData._id, inputValue, loginData?.token);
               }}
             ></i>

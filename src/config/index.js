@@ -1,5 +1,5 @@
 import { notification } from "antd";
-export const endpoint = "http://localhost:5000/api";
+export const endpoint = "http://192.168.5.220:5000/api";
 
 const hasCode = (error, status) => {
   if (
