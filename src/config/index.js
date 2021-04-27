@@ -1,5 +1,9 @@
 import { notification } from "antd";
-export const endpoint = "http://192.168.5.220:5000/api";
+export const isLocal = window.location.href.match(/127|192|localhost/g);
+
+export const endpoint = isLocal
+  ? "http://192.168.5.220:5000/api"
+  : "https://chat-al.herokuapp.com/api/";
 
 const hasCode = (error, status) => {
   if (
