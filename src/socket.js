@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { isLocal } from "config";
 const socketUrlLocal = "http://192.168.5.220:5000";
-const socketUrl = "https://chat-al.herokuapp.com:5000";
+const socketUrl = "https://chat-al.herokuapp.com";
 export const loadSocket = () => {
   const socket = io(isLocal ? socketUrlLocal : socketUrl);
   window.socket = socket;
