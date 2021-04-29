@@ -56,3 +56,23 @@ export const submitMsg = (id, text, token) => {
     })
     .catch((error) => ({ error }));
 };
+
+export const createRoom = (name, image, description, token) => {
+  return instanceAxios
+    .post("/createRoom", {
+      name,
+      image,
+      description,
+      token,
+    })
+    .catch((error) => ({ error }));
+};
+
+export const deleteRoom = (id, token) => {
+  return instanceAxios
+    .post("/deleteRoom", {
+      id,
+      token,
+    })
+    .catch((error) => ({ error }));
+};

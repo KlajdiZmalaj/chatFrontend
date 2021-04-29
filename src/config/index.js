@@ -18,6 +18,7 @@ const hasCode = (error, status) => {
 };
 export const handleError = (error) => {
   // console.log("error handler", error, { error });
+
   if (hasCode(error, 401)) {
     //loged out
     window.store.dispatch({ type: "SET_UNAUTHORIZATION" });

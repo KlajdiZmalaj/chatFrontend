@@ -10,6 +10,8 @@ export default function* rootSaga() {
       takeLatest("GET_LOGIN", AuthGenerators.getLogin),
       takeLatest("CHECK_TOKEN", AuthGenerators.checkToken),
       takeLatest("SUBMIT_MSG", AuthGenerators.submitMsg),
+      takeLatest("CREATE_ROOM", AuthGenerators.createRoom),
+      takeLatest("DELETE_ROOM", AuthGenerators.deleteRoom),
     ],
     // MAIN
     ...[

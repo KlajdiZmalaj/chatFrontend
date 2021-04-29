@@ -16,8 +16,11 @@ const Home = ({
   setRoomData,
   checkToken,
   submitMsg,
+  createRoom,
+  deleteRoom,
 }) => {
   useEffect(() => {
+    checkToken(loginData.token);
     getRooms();
   }, []);
   useEffect(() => {
@@ -28,6 +31,9 @@ const Home = ({
       }, 300);
   }, [roomData?.name]);
   const [inputValue, setInputMsg] = useState("");
+  const [formData, setFormData] = useState({ visible: false });
+  const isAdmin = loginData.isAdmin;
+  const [dragX, setDragX] = useState(0);
   //console.log("dataas activeRoom roomData", roomData);
   return (
     <div className="homePage">
@@ -37,7 +43,20 @@ const Home = ({
             <div
               key={room._id}
               room-id={room._id}
-              className={`room${activeRoom === room._id ? " active" : ""}`}
+              className={`room${activeRoom === room._id ? " active" : ""}${
+                dragX === room._id ? " slideRight" : ""
+              }`}
+              draggable={isAdmin}
+              onDragStart={(e) => {
+                setDragX(0);
+                setDragX(e.clientX);
+              }}
+              onDragEnd={(e) => {
+                console.log("ca ka e", e, e.clientX, e.clientY);
+                if (e.clientX - dragX >= 100) {
+                  setDragX(room._id);
+                }
+              }}
               onClick={() => {
                 setActiveRoom(room._id);
                 getRoomData(room._id);
@@ -47,6 +66,15 @@ const Home = ({
                 window.socket.emit("subscribe", room._id);
               }}
             >
+              <i
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  deleteRoom(room._id, loginData.token);
+                }}
+                className="fal fa-times"
+                aria-hidden="true"
+              ></i>
               <img src={room?.image} alt="" /> <span>{room?.name}</span>
               {activeRoom === room._id ? (
                 <i
@@ -62,6 +90,16 @@ const Home = ({
             </div>
           );
         })}
+        {isAdmin && (
+          <button
+            onClick={() => {
+              setFormData({ ...formData, visible: true });
+            }}
+            className="createRoom"
+          >
+            Create Room
+          </button>
+        )}
       </div>
       <div className="homePage--right">
         <div className="homePage--right__top">
@@ -69,13 +107,13 @@ const Home = ({
             Welcome <span>{loginData.username}</span>{" "}
           </p>
           <p id="roomName">{roomData?.name || "Select a Room"}</p>
-          <button
+          {/* <button
             onClick={() => {
               checkToken(loginData.token);
             }}
           >
             <i className="fal fa-badge-check"></i> Check token
-          </button>
+          </button> */}
           <button
             onClick={() => {
               setUnauthorization();
@@ -154,6 +192,71 @@ const Home = ({
           </div>
         </div>
       </div>
+      {formData.visible && (
+        <div className="popUpForm">
+          <div className="popUpForm--title">
+            Create Room{" "}
+            <i
+              onClick={() => {
+                setFormData({ ...formData, visible: false });
+              }}
+              className="fal fa-times"
+              aria-hidden="true"
+            ></i>{" "}
+          </div>
+          <div className="popUpForm--field">
+            <span>Name : </span>{" "}
+            <input
+              type="text"
+              value={formData.name}
+              placeholder="#"
+              onChange={(e) => {
+                setFormData({ ...formData, name: e.target.value });
+              }}
+            />
+          </div>
+          <div className="popUpForm--field">
+            <span>Description : </span>{" "}
+            <input
+              type="text"
+              value={formData.desc}
+              placeholder="#"
+              onChange={(e) => {
+                setFormData({ ...formData, desc: e.target.value });
+              }}
+            />
+          </div>
+          <div className="popUpForm--field">
+            <span>Image URL : </span>{" "}
+            <input
+              type="text"
+              placeholder="https://imageURL.com"
+              value={formData.img}
+              onChange={(e) => {
+                setFormData({ ...formData, img: e.target.value });
+              }}
+            />
+          </div>
+          <div className="popUpForm--field">
+            <button
+              onClick={() => {
+                createRoom(
+                  formData.name,
+                  formData.img,
+                  formData.desc,
+                  loginData.token,
+                  () => {
+                    setFormData({ visible: false });
+                    getRooms();
+                  }
+                );
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
