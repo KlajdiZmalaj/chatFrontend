@@ -29,7 +29,9 @@ const Login = ({ getLogin }) => {
           <i className="fal fa-lock" aria-hidden="true"></i>
           <input
             placeholder="Passcode"
-            type="text"
+            type="password"
+            readOnly
+            onClick={(e) => (e.target.readOnly = false)}
             onChange={(e) => {
               setFormData({
                 ...formData,

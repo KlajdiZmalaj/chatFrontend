@@ -6,7 +6,15 @@ const { Types, Creators } = createActions({
   setLoginData: ["loginData"],
   checkToken: ["token"],
   submitMsg: ["id", "text", "token"],
-  createRoom: ["name", "image", "description", "token", "callBack"],
+  createRoom: [
+    "name",
+    "image",
+    "description",
+    "token",
+    "isPrivate",
+    "password",
+    "callBack",
+  ],
   deleteRoom: ["id", "token"],
 });
 

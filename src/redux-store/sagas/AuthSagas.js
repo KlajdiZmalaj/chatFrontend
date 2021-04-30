@@ -31,12 +31,22 @@ export function* submitMsg({ id, text, token }) {
   if (response.data) {
   }
 }
-export function* createRoom({ name, image, description, token, callBack }) {
+export function* createRoom({
+  name,
+  image,
+  description,
+  isPrivate,
+  password,
+  token,
+  callBack,
+}) {
   const response = yield call(
     AuthReq.createRoom,
     name,
     image,
     description,
+    isPrivate,
+    password,
     token
   );
   //console.log("response", response);

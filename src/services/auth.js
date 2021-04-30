@@ -57,12 +57,21 @@ export const submitMsg = (id, text, token) => {
     .catch((error) => ({ error }));
 };
 
-export const createRoom = (name, image, description, token) => {
+export const createRoom = (
+  name,
+  image,
+  description,
+  isPrivate,
+  password,
+  token
+) => {
   return instanceAxios
     .post("/createRoom", {
       name,
       image,
       description,
+      isPrivate,
+      password,
       token,
     })
     .catch((error) => ({ error }));
