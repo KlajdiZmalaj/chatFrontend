@@ -47,6 +47,7 @@ const Home = ({
         {rooms.map((room) => {
           return (
             <Room
+              key={room._id}
               room={room}
               activeRoom={activeRoom}
               isAdmin={isAdmin}
