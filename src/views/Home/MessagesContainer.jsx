@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Tooltip, Dropdown } from "antd";
 import moment from "moment";
 
-export default ({ roomData, loginData, activeRoom, submitMsg }) => {
-  const [inputValue, setInputMsg] = useState("");
+export default ({
+  roomData,
+  loginData,
+  activeRoom,
+  submitMsg,
+  setLoadingData,
+  deleteMessage,
+}) => {
   const [visible, handleVisibleChange] = useState(false);
   const [emojiCategories, setCat] = useState([]);
   const [activeEmojiCat, setActiveEmojiCat] = useState("");
@@ -21,6 +27,7 @@ export default ({ roomData, loginData, activeRoom, submitMsg }) => {
     funx();
   }, []);
   useEffect(() => {
+    setLoadingData(true);
     const funx = async () => {
       setEmojis([]);
       const emojisres = await fetch(
@@ -28,12 +35,18 @@ export default ({ roomData, loginData, activeRoom, submitMsg }) => {
       );
       const emojisData = await emojisres.json();
       setEmojis(emojisData?.slice(0, 400));
+      setLoadingData(false);
       //console.log("emojisData", emojisData);
     };
     if (activeEmojiCat) {
       funx();
     }
   }, [activeEmojiCat]);
+  useEffect(() => {
+    if (!visible) {
+      setEmojis([]);
+    }
+  }, [visible]);
   //console.log("emojiCategories", emojiCategories);
 
   return (
@@ -57,10 +70,23 @@ export default ({ roomData, loginData, activeRoom, submitMsg }) => {
                 >
                   <Dropdown
                     overlay={
-                      <div className="ddMenu">
-                        Delete Message{" "}
-                        <i className="fal fa-trash" aria-hidden="true"></i>
-                      </div>
+                      loginData?.username === msg?.user?.username ? (
+                        <div
+                          className="ddMenu"
+                          onClick={() => {
+                            deleteMessage(
+                              roomData._id,
+                              msg._id,
+                              loginData.token
+                            );
+                          }}
+                        >
+                          Delete Message{" "}
+                          <i className="fal fa-trash" aria-hidden="true"></i>
+                        </div>
+                      ) : (
+                        <span></span>
+                      )
                     }
                     trigger={["contextMenu"]}
                   >
@@ -129,7 +155,9 @@ export default ({ roomData, loginData, activeRoom, submitMsg }) => {
                     <Tooltip title={emoji.slug} key={emoji.slug}>
                       <span
                         onClick={() => {
-                          setInputMsg(`${inputValue}${emoji.character}`);
+                          document.getElementById("inputMsg").value = `${
+                            document.getElementById("inputMsg").value
+                          }${emoji.character}`;
                         }}
                       >
                         {emoji.character}
@@ -150,24 +178,31 @@ export default ({ roomData, loginData, activeRoom, submitMsg }) => {
 
         <input
           type="text"
-          value={inputValue}
+          //value={inputValue}
+          id="inputMsg"
           name="msgType"
           autoComplete="off"
           onKeyPress={(e) => {
             if (e.charCode == 13) {
-              setInputMsg("");
-              submitMsg(roomData._id, inputValue, loginData?.token);
+              if (e.target.value.length > 0) {
+                submitMsg(roomData._id, e.target.value, loginData?.token);
+                e.target.value = "";
+              }
             }
-          }}
-          onChange={(e) => {
-            setInputMsg(e.target.value);
           }}
         />
         <i
           className="fad fa-paper-plane"
           onClick={() => {
-            setInputMsg("");
-            submitMsg(roomData._id, inputValue, loginData?.token);
+            const inpElem = document.getElementById("inputMsg");
+            if (inpElem.value.length > 0) {
+              submitMsg(
+                roomData._id,
+                document.getElementById("inputMsg").value,
+                loginData?.token
+              );
+              document.getElementById("inputMsg").value = "";
+            }
           }}
         ></i>
       </div>

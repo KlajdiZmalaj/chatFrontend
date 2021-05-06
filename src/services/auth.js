@@ -85,3 +85,13 @@ export const deleteRoom = (id, token) => {
     })
     .catch((error) => ({ error }));
 };
+
+export const deleteMessage = (roomId, msgId, token) => {
+  return instanceAxios
+    .post("/deleteMessage", {
+      roomId,
+      msgId,
+      token,
+    })
+    .catch((error) => ({ error }));
+};

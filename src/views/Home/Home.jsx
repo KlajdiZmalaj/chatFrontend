@@ -20,6 +20,8 @@ const Home = ({
   submitMsg,
   createRoom,
   deleteRoom,
+  setLoadingData,
+  deleteMessage,
 }) => {
   const isAdmin = loginData.isAdmin;
   const [formData, setFormData] = useState({
@@ -103,6 +105,8 @@ const Home = ({
           loginData={loginData}
           activeRoom={activeRoom}
           submitMsg={submitMsg}
+          setLoadingData={setLoadingData}
+          deleteMessage={deleteMessage}
         />
       </div>
       {formData.visible && (

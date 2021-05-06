@@ -6,13 +6,13 @@ import * as Routes from "routes";
 import "antd/dist/antd.css";
 import "styles/general.css";
 import { loadSocket } from "./socket";
-const Root = ({ loginData = {} }) => {
+const Root = ({ loginData = {}, loadingData }) => {
   useEffect(() => {
     loadSocket();
   }, []);
   return (
     <>
-      <div></div>
+      <div className={"topLoading" + (loadingData ? " load" : "")}></div>
       <HashRouter>
         <Switch>
           <Route exact path="/">
@@ -52,5 +52,8 @@ const Root = ({ loginData = {} }) => {
   );
 };
 
-const mstp = ({ auth: { loginData } }) => ({ loginData });
+const mstp = ({ auth: { loginData }, main: { loadingData } }) => ({
+  loginData,
+  loadingData,
+});
 export default connect(mstp, { ...AuthActions, ...MainActions })(Root);

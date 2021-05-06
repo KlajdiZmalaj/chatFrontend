@@ -72,3 +72,15 @@ export function* deleteRoom({ id, token }) {
     //window.store.dispatch({ type: "GET_ROOMS" });
   }
 }
+
+export function* deleteMessage({ roomId, msgId, token }) {
+  const response = yield call(AuthReq.deleteMessage, roomId, msgId, token);
+  if (response.data) {
+    // notification["success"]({
+    //   description: response?.data?.message,
+    //   placement: window.innerWidth <= 1024 ? "topRight" : "bottomRight",
+    //   duration: 4,
+    // });
+    yield put({ type: "GET_ROOM_DATA", id: roomId });
+  }
+}

@@ -16,6 +16,7 @@ const { Types, Creators } = createActions({
     "callBack",
   ],
   deleteRoom: ["id", "token"],
+  deleteMessage: ["roomId", "msgId", "token"],
 });
 
 export const AuthTypes = Types;

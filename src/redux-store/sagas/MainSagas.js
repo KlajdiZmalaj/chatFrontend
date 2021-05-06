@@ -42,9 +42,11 @@ export function* getRooms({}) {
 }
 
 export function* getRoomData({ id }) {
+  yield put(MainActions.setLoadingData(true));
   const response = yield call(MainReq.getRoomData, id);
   if (response.data) {
     yield put(MainActions.setRoomData(response.data?.data));
+    yield put(MainActions.setLoadingData(false));
   }
 }
 
