@@ -1,9 +1,9 @@
 {
-  "homepage": "http://klajdizmalaj.github.io/node-chat",
+  "homepage": "http://klajdizmalaj.github.io/chatFrontend",
   "description": "aplication",
-  "author": "Altech Solutions",
+  "author": "Klajdi Zmalaj",
   "build": {
-    "appId": "altechsolutions.al"
+    "appId": "klajdizmalaj@icloud.com"
   },
   "name": "app",
   "version": "0.1.0",
