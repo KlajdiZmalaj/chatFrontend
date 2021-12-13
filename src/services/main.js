@@ -14,7 +14,7 @@ instanceAxios.interceptors.request.use(
   },
   (error) => {
     Promise.reject(error);
-  }
+  },
 );
 
 instanceAxios.interceptors.response.use(
@@ -22,7 +22,7 @@ instanceAxios.interceptors.response.use(
     // console.log("response", response);
     return response;
   },
-  (error) => handleError(error)
+  (error) => handleError(error),
 );
 
 export const register = (username, password) => {
@@ -40,4 +40,14 @@ export const getRooms = () => {
 
 export const getRoomData = (id) => {
   return instanceAxios.get(`/getRoomData/${id}`).catch((error) => ({ error }));
+};
+
+export const uploadFile = (file) => {
+  let data = new FormData();
+  data.append('image', file);
+  const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+  return instanceAxios
+    .post(`/upload`,data , config)
+    .catch((error) => ({ error }));
 };

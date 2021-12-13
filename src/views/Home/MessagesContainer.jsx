@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Tooltip, Dropdown } from "antd";
 import moment from "moment";
-import { b64toBlob } from "../../utils";
+import { uploadFile } from "../../services/main";
+
 export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, deleteMessage }) => {
   const [visible, handleVisibleChange] = useState(false);
   const [emojiCategories, setCat] = useState([]);
@@ -160,22 +161,7 @@ export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, de
             onChange={(e) => {
               const files = e.target.files;
               for (const file of files) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                  const b64 = e.target.result;
-                  const url = b64toBlob(b64, file.type)[0];
-                  const blobi = b64toBlob(b64, file.type)[1];
-                  setFiles({
-                    file: file,
-                    id: `${file.name}${file.size}`,
-                    name: file.name,
-                    url,
-                    blobi,
-                    type: file.type,
-                    base64: b64,
-                  });
-                };
-                reader.readAsDataURL(file);
+                uploadFile(file);
               }
             }}
           />
