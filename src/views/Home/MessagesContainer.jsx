@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Tooltip, Dropdown } from "antd";
 import moment from "moment";
-
-export default ({
-  roomData,
-  loginData,
-  activeRoom,
-  submitMsg,
-  setLoadingData,
-  deleteMessage,
-}) => {
+import { b64toBlob } from "../../utils";
+export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, deleteMessage }) => {
   const [visible, handleVisibleChange] = useState(false);
   const [emojiCategories, setCat] = useState([]);
   const [activeEmojiCat, setActiveEmojiCat] = useState("");
   //const [activeEmojiSubCat, setActiveEmojiSubCat] = useState("");
   const [emojis, setEmojis] = useState([]);
+  const [stateFiles, setFiles] = useState({});
   useEffect(() => {
     const funx = async () => {
       const catres = await fetch(
-        "https://emoji-api.com/categories?access_key=134301967264b9e3817d636e2373d73d653a102d"
+        "https://emoji-api.com/categories?access_key=134301967264b9e3817d636e2373d73d653a102d",
       );
       const dataCat = await catres.json();
       setCat(dataCat);
@@ -31,7 +25,7 @@ export default ({
     const funx = async () => {
       setEmojis([]);
       const emojisres = await fetch(
-        `https://emoji-api.com/categories/${activeEmojiCat}?access_key=134301967264b9e3817d636e2373d73d653a102d`
+        `https://emoji-api.com/categories/${activeEmojiCat}?access_key=134301967264b9e3817d636e2373d73d653a102d`,
       );
       const emojisData = await emojisres.json();
       setEmojis(emojisData?.slice(0, 400));
@@ -48,7 +42,7 @@ export default ({
     }
   }, [visible]);
   //console.log("emojiCategories", emojiCategories);
-
+  console.log("stateFiles", stateFiles);
   return (
     <div className="homePage--right__messages">
       <div id="msgWrapper" className="msg-wrapper">
@@ -59,14 +53,8 @@ export default ({
               return (
                 <Tooltip
                   key={msg.date}
-                  placement={
-                    loginData?.username === msg?.user?.username
-                      ? "topRight"
-                      : "topLeft"
-                  }
-                  title={`Sent at ${moment(msg.date).format(
-                    "MMMM Do YYYY, h:mm:ss a"
-                  )}`}
+                  placement={loginData?.username === msg?.user?.username ? "topRight" : "topLeft"}
+                  title={`Sent at ${moment(msg.date).format("MMMM Do YYYY, h:mm:ss a")}`}
                 >
                   <Dropdown
                     overlay={
@@ -74,15 +62,10 @@ export default ({
                         <div
                           className="ddMenu"
                           onClick={() => {
-                            deleteMessage(
-                              roomData._id,
-                              msg._id,
-                              loginData.token
-                            );
+                            deleteMessage(roomData._id, msg._id, loginData.token);
                           }}
                         >
-                          Delete Message{" "}
-                          <i className="fal fa-trash" aria-hidden="true"></i>
+                          Delete Message <i className="fal fa-trash" aria-hidden="true"></i>
                         </div>
                       ) : (
                         <span></span>
@@ -90,12 +73,9 @@ export default ({
                     }
                     trigger={["contextMenu"]}
                   >
-                    <div
-                      className={`msg${
-                        loginData?.username === msg?.user?.username ? " me" : ""
-                      }`}
-                    >
+                    <div className={`msg${loginData?.username === msg?.user?.username ? " me" : ""}`}>
                       <div className="userMsg">{msg?.user?.username}</div>
+                      {msg.image && <img src={msg.image} alt="" />}
                       <div className="text">{msg?.text}</div>
                     </div>
                   </Dropdown>
@@ -104,9 +84,7 @@ export default ({
             })
         ) : (
           <span>
-            {!activeRoom
-              ? "No room selected."
-              : "No messages yet in this room. Start typing your first message."}
+            {!activeRoom ? "No room selected." : "No messages yet in this room. Start typing your first message."}
           </span>
         )}
       </div>
@@ -155,9 +133,9 @@ export default ({
                     <Tooltip title={emoji.slug} key={emoji.slug}>
                       <span
                         onClick={() => {
-                          document.getElementById("inputMsg").value = `${
-                            document.getElementById("inputMsg").value
-                          }${emoji.character}`;
+                          document.getElementById("inputMsg").value = `${document.getElementById("inputMsg").value}${
+                            emoji.character
+                          }`;
                         }}
                       >
                         {emoji.character}
@@ -175,6 +153,36 @@ export default ({
         >
           <i className="far fa-grin-stars"></i>
         </Dropdown>
+        <div className="uploadWrapper">
+          <input
+            id="fileIcon"
+            type="file"
+            onChange={(e) => {
+              const files = e.target.files;
+              for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                  const b64 = e.target.result;
+                  const url = b64toBlob(b64, file.type)[0];
+                  const blobi = b64toBlob(b64, file.type)[1];
+                  setFiles({
+                    file: file,
+                    id: `${file.name}${file.size}`,
+                    name: file.name,
+                    url,
+                    blobi,
+                    type: file.type,
+                    base64: b64,
+                  });
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+          <label htmlFor="fileIcon">
+            <i className="fa fa-upload" aria-hidden="true"></i>
+          </label>
+        </div>
 
         <input
           type="text"
@@ -185,7 +193,7 @@ export default ({
           onKeyPress={(e) => {
             if (e.charCode == 13) {
               if (e.target.value.length > 0) {
-                submitMsg(roomData._id, e.target.value, loginData?.token);
+                submitMsg(roomData._id, e.target.value, loginData?.token, stateFiles);
                 e.target.value = "";
               }
             }
@@ -196,11 +204,7 @@ export default ({
           onClick={() => {
             const inpElem = document.getElementById("inputMsg");
             if (inpElem.value.length > 0) {
-              submitMsg(
-                roomData._id,
-                document.getElementById("inputMsg").value,
-                loginData?.token
-              );
+              submitMsg(roomData._id, document.getElementById("inputMsg").value, loginData?.token, stateFiles);
               document.getElementById("inputMsg").value = "";
             }
           }}

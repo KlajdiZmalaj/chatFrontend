@@ -5,7 +5,7 @@ const { Types, Creators } = createActions({
   getLogin: ["username", "password"],
   setLoginData: ["loginData"],
   checkToken: ["token"],
-  submitMsg: ["id", "text", "token"],
+  submitMsg: ["id", "text", "token", 'imgObj'],
   createRoom: [
     "name",
     "image",

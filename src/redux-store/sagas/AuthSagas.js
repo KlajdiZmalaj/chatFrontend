@@ -26,8 +26,8 @@ export function* checkToken({ token }) {
   }
 }
 
-export function* submitMsg({ id, text, token }) {
-  const response = yield call(AuthReq.submitMsg, id, text, token);
+export function* submitMsg({ id, text, token ,imgObj }) {
+  const response = yield call(AuthReq.submitMsg, id, text, token,imgObj);
   if (response.data) {
   }
 }

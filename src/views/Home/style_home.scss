@@ -216,6 +216,15 @@
         flex-shrink: 0;
         max-width: 30%;
         word-break: break-all;
+        >img {
+          min-height: 200px;
+          width: 300px;
+          object-fit: contain;
+          display: block;
+          background-color: #00000045;
+          margin-bottom: 5px;
+          margin-top: 5px;
+        }
         .userMsg {
           font-weight: 500;
           font-family: "Roboto", sans-serif;
@@ -257,7 +266,7 @@
           height: 100%;
           position: absolute;
           z-index: 0;
-          padding-left: 60px;
+          padding-left: 90px;
           font-size: 15px;
           cursor: default;
 
@@ -483,5 +492,18 @@
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+.uploadWrapper {
+  >input {
+    display: none !important;
+  }
+  label {
+    position: absolute;
+    left: 35px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    cursor: pointer;
   }
 }

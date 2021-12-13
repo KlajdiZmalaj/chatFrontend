@@ -9,6 +9,7 @@ instanceAxios.interceptors.request.use(
   async (config) => {
     config.headers = {
       Accept: "application/json",
+      "Sec-Fetch-Mode": "no-cors"
     };
 
     return config;
@@ -47,12 +48,13 @@ export const checkToken = (token) => {
     .catch((error) => ({ error }));
 };
 
-export const submitMsg = (id, text, token) => {
+export const submitMsg = (id, text, token , image) => {
   return instanceAxios
     .post("/sendMsg", {
       roomId: id,
       text,
       token,
+      image
     })
     .catch((error) => ({ error }));
 };
