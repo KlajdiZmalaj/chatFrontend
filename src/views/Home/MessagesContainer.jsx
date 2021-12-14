@@ -1,7 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Tooltip, Dropdown } from "antd";
 import moment from "moment";
-import { uploadFile } from "../../services/main";
+import { b64toBlob } from "../../utils";
+
+const handleFileChosen = async (file) => {
+  return new Promise((resolve, reject) => {
+    let fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      const b64 = e.target.result;
+      const url = b64toBlob(b64, file.type)[0];
+      const blobi = b64toBlob(b64, file.type)[1];
+
+      resolve({
+        file: file,
+        id: `${file.name}${file.size}`,
+        name: file.name,
+        url,
+        blobi,
+        type: file.type,
+        base64: b64,
+      });
+    };
+    fileReader.readAsDataURL(file);
+    fileReader.onerror = reject;
+  });
+};
 
 export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, deleteMessage }) => {
   const [visible, handleVisibleChange] = useState(false);
@@ -9,7 +32,7 @@ export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, de
   const [activeEmojiCat, setActiveEmojiCat] = useState("");
   //const [activeEmojiSubCat, setActiveEmojiSubCat] = useState("");
   const [emojis, setEmojis] = useState([]);
-  const [stateFiles, setFiles] = useState({});
+  const [stateFiles, setFiles] = useState([]);
   useEffect(() => {
     const funx = async () => {
       const catres = await fetch(
@@ -42,7 +65,7 @@ export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, de
       setEmojis([]);
     }
   }, [visible]);
-  //console.log("emojiCategories", emojiCategories);
+
   console.log("stateFiles", stateFiles);
   return (
     <div className="homePage--right__messages">
@@ -158,16 +181,35 @@ export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, de
           <input
             id="fileIcon"
             type="file"
-            onChange={(e) => {
-              const files = e.target.files;
-              for (const file of files) {
-                uploadFile(file);
-              }
+            multiple
+            onChange={async (e) => {
+              let AllFiles = [];
+              [...e.target.files].map((file) => AllFiles.push(file));
+              const results = await Promise.all(
+                AllFiles.map(async (file) => {
+                  const fileContents = await handleFileChosen(file);
+                  return fileContents;
+                }),
+              );
+              setFiles(results);
             }}
           />
           <label htmlFor="fileIcon">
             <i className="fa fa-upload" aria-hidden="true"></i>
           </label>
+          {stateFiles.length &&
+            stateFiles.map((item, id) => <img key={id} src={item.url} alt="" className="preview" />)}
+          {stateFiles.length && (
+            <div
+              className="fileRemover"
+              onClick={() => {
+                setFiles([]);
+              }}
+            >
+              {" "}
+              <i className="fal fa-times" aria-hidden="true"></i> Remove {stateFiles.length} files
+            </div>
+          )}
         </div>
 
         <input
@@ -179,6 +221,7 @@ export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, de
           onKeyPress={(e) => {
             if (e.charCode == 13) {
               if (e.target.value.length > 0) {
+                setFiles([]);
                 submitMsg(roomData._id, e.target.value, loginData?.token, stateFiles);
                 e.target.value = "";
               }
@@ -192,6 +235,7 @@ export default ({ roomData, loginData, activeRoom, submitMsg, setLoadingData, de
             if (inpElem.value.length > 0) {
               submitMsg(roomData._id, document.getElementById("inputMsg").value, loginData?.token, stateFiles);
               document.getElementById("inputMsg").value = "";
+              setFiles([]);
             }
           }}
         ></i>

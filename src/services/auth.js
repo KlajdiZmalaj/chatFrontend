@@ -48,13 +48,13 @@ export const checkToken = (token) => {
     .catch((error) => ({ error }));
 };
 
-export const submitMsg = (id, text, token , image) => {
+export const submitMsg = (id, text, token , images) => {
   return instanceAxios
     .post("/sendMsg", {
       roomId: id,
       text,
       token,
-      image
+      ...(images.length ? {images} : {})
     })
     .catch((error) => ({ error }));
 };
